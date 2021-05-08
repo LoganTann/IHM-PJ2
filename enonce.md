@@ -1,4 +1,4 @@
-### accueil
+### Accueil
 
 * `ComboBox` pour le nom du joueur. Affichera la liste des joueurs déjà connus (cf section suivante)
 * `Button` pour démarrer la partie. Disabled si nom < 3 chars
