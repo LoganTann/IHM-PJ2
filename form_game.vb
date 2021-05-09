@@ -1,5 +1,4 @@
-﻿Imports System.IO
-Public Class form_game
+﻿Public Class form_game
 
 
     Private Const NBR_CARD_TYPES = 5, NBR_SAME_CARDS = 4
@@ -7,41 +6,45 @@ Public Class form_game
     Private allLabels(NBR_CARD_TYPES * NBR_SAME_CARDS - 1) As Label
 
 
-    ' METHODES UTILITAIRES ------------------------------------------------------------------------------------------------
-
-    ''' <summary>fonction statique transformant un chemin relatif au dossier de projet en chemin absolu. Doit être démarré sur VS2019</summary>
-    ''' <param name="filePath">Le chemin relatif au dossier du projet en format windows</param>
-    ''' <returns>littéralement Directory.GetCurrentDirectory().Replace("\bin\Debug", "\").Replace("\bin\Release", "\") + filePath</returns>
-    Shared Function getFile(filePath As String) As String
-        Dim rawCD As String = Directory.GetCurrentDirectory()
-        Dim newCD = rawCD.Replace("\bin\Debug", "\").Replace("\bin\Release", "\")
-        Return newCD + filePath
-    End Function
+    ' METHODES D'INITIALISATION ------------------------------------------------------------------------------------------------
 
     ''' <summary>
     ''' Initialise le tableau allImages
     ''' </summary>
     Private Sub loadAllImages()
         For i As Integer = 0 To allImages.Length - 1
-            allImages(i) = Image.FromFile(getFile($"images\Card{i}.png"))
+            allImages(i) = Image.FromFile(GameUtils.getFile($"images\Card{i}.png"))
         Next
     End Sub
 
     ''' <summary>
     ''' Initialise le tableau allLabels
     ''' </summary>
-    Private Sub loadAllLabels()
+    Private Sub loadAllCardLabels()
         Dim i As Integer = 0
         For row As Integer = 0 To NBR_CARD_TYPES - 1
             For col As Integer = 0 To NBR_SAME_CARDS - 1
                 allLabels(i) = New Label
-                allLabels(i).Image = allImages(row)
-                allLabels(i).Size = allImages(row).Size
-                allLabels(i).Text = ""
-                allLabels(i).AutoSize = False
-                allLabels(i).Name = row ' pas prévu pour mais bon, tant que ça stocke le type d'image
+                ' Ajoute l'event "au clic d'une carte, faire..."
+                AddHandler allLabels(i).Click, AddressOf onCardClick
+                ' Un peu de customisation : 
+                With allLabels(i)
+                    .Image = allImages(row)
+                    .Size = allImages(row).Size
+                    .Text = ""
+                    .AutoSize = False
+                    .Name = row ' pas prévu pour mais bon, tant que ça stocke le type d'image
+                End With
                 i += 1
             Next
+        Next
+    End Sub
+    ''' <summary>
+    ''' Affiche les cartes dans le formulaire. Sera utile si jamais on veut activer le random ou pas.
+    ''' </summary>
+    Private Sub printAllCardLabels()
+        For Each lbl As Label In allLabels
+            cards_container.Controls.Add(lbl) ' assez verbeux pour comprendre ce que ça fait
         Next
     End Sub
 
@@ -52,27 +55,39 @@ Public Class form_game
     Private Sub form_game_Load(sender As Object, e As EventArgs) Handles Me.Load
         ' phase d'initialisation
         loadAllImages()
-        loadAllLabels()
+        loadAllCardLabels()
+        printAllCardLabels()
 
-        For Each lbl As Label In allLabels
-            AddHandler lbl.Click, AddressOf onCardClick
-            cards_container.Controls.Add(lbl)
-        Next
+        ' TODO : initialiser le nom du joueur
+        ' TODO : initialiser le timer
     End Sub
 
     Private Sub onCardClick(sender As Object, e As EventArgs)
-        ' désactiver une carte (juste pour tester et voir si l'event est triggered)
+        ' TODO : Logique de jeu
+        ' désactiver une carte (juste pour __tester__ et voir si l'event est triggered)
         sender.Enabled = False
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        ' Bouton de confirmation
-        Dim result As MsgBoxResult = MsgBox("Quitter ?", MsgBoxStyle.YesNo)
-        If (result = MsgBoxResult.Yes) Then
+    ' TODO : Lorsque le jeu est fini, enregistrer le score si nécessaire + affichages.
 
+
+    ' Confirmation de fermeture
+    Private Const CLOSE_CONFIRM_MSG = "Voulez-vous vraiment abandonner la partie en cours ?"
+    Private Sub ConfirmClose()
+        ' Bouton de confirmation
+        If (GameUtils.confirm(CLOSE_CONFIRM_MSG)) Then
             Me.Hide() ' Quitte le form courant
             Dim accueil As New form_home() ' récupère le menu
             accueil.Show() ' l'affiche
         End If
+    End Sub
+    Private Sub ConfirmClose(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
+        ' Au clic du bouton rouge natif de fermeture
+        e.Cancel = True
+        ConfirmClose()
+    End Sub
+    Private Sub ConfirmClose(sender As Object, e As EventArgs) Handles Button1.Click
+        ' Au clic du bouton "quitter"
+        ConfirmClose()
     End Sub
 End Class
