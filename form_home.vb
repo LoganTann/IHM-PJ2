@@ -43,7 +43,15 @@
         End If
     End Sub
 
+    Private Sub btn_option_Click(sender As Object, e As EventArgs) Handles btn_option.Click
+        Dim dialog As New form_options
+        dialog.ShowDialog()
+    End Sub
 
+    Private Sub btn_score_Click(sender As Object, e As EventArgs) Handles btn_score.Click
+        Dim dialog As New form_scores
+        dialog.ShowDialog()
+    End Sub
 
     ' Confirmation de fermeture : 
     Private Const CLOSE_CONFIRM_MSG = "Voulez-vous vraiment quitter l'application ?" & vbCrLf &
@@ -53,23 +61,13 @@
             Application.Exit()
         End If
     End Sub
-    Private Sub ConfirmClose(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing, btn_exit.Click
+    Private Sub ConfirmClose_native(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
         ' Au clic du bouton rouge natif de fermeture
         ConfirmClose()
         e.Cancel = True
     End Sub
-    Private Sub ConfirmClose(sender As Object, e As EventArgs) Handles btn_exit.Click
+    Private Sub ConfirmClose_btn(sender As Object, e As EventArgs) Handles btn_exit.Click
         ' Au clic du bouton "quitter"
         ConfirmClose()
-    End Sub
-
-    Private Sub btn_option_Click(sender As Object, e As EventArgs) Handles btn_option.Click
-        Dim dialog As New form_options
-        dialog.ShowDialog()
-    End Sub
-
-    Private Sub btn_score_Click(sender As Object, e As EventArgs) Handles btn_score.Click
-        Dim dialog As New form_scores
-        dialog.ShowDialog()
     End Sub
 End Class

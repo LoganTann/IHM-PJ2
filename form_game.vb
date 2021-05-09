@@ -81,12 +81,12 @@
             accueil.Show() ' l'affiche
         End If
     End Sub
-    Private Sub ConfirmClose(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
+    Private Sub ConfirmClose_native(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
         ' Au clic du bouton rouge natif de fermeture
         e.Cancel = True
         ConfirmClose()
     End Sub
-    Private Sub ConfirmClose(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub ConfirmClose_btn(sender As Object, e As EventArgs) Handles Button1.Click
         ' Au clic du bouton "quitter"
         ConfirmClose()
     End Sub

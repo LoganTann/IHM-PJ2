@@ -134,6 +134,7 @@ Partial Class form_home
         Me.Controls.Add(Me.btn_play)
         Me.MinimumSize = New System.Drawing.Size(422, 190)
         Me.Name = "form_home"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form1"
         Me.ResumeLayout(False)
         Me.PerformLayout()

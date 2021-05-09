@@ -106,6 +106,7 @@ Partial Class form_game
         Me.Controls.Add(Me.cards_container)
         Me.Controls.Add(Me.Button1)
         Me.Name = "form_game"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "form_game"
         Me.ResumeLayout(False)
         Me.PerformLayout()
