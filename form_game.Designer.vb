@@ -27,7 +27,7 @@ Partial Class form_game
         Me.Button2 = New System.Windows.Forms.Button()
         Me.lbl_constProfile = New System.Windows.Forms.Label()
         Me.lbl_profile = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lbl_time = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
@@ -75,14 +75,14 @@ Partial Class form_game
         Me.lbl_profile.TabIndex = 7
         Me.lbl_profile.Text = "<nom du profil>"
         '
-        'Label1
+        'lbl_time
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(497, 17)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(48, 13)
-        Me.Label1.TabIndex = 9
-        Me.Label1.Text = "<mm:ss>"
+        Me.lbl_time.AutoSize = True
+        Me.lbl_time.Location = New System.Drawing.Point(497, 17)
+        Me.lbl_time.Name = "lbl_time"
+        Me.lbl_time.Size = New System.Drawing.Size(48, 13)
+        Me.lbl_time.TabIndex = 9
+        Me.lbl_time.Text = "<mm:ss>"
         '
         'Label2
         '
@@ -99,7 +99,7 @@ Partial Class form_game
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(592, 559)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.lbl_time)
         Me.Controls.Add(Me.lbl_profile)
         Me.Controls.Add(Me.lbl_constProfile)
         Me.Controls.Add(Me.Button2)
@@ -117,6 +117,6 @@ Partial Class form_game
     Friend WithEvents Button2 As Button
     Friend WithEvents lbl_constProfile As Label
     Friend WithEvents lbl_profile As Label
-    Friend WithEvents Label1 As Label
+    Friend WithEvents lbl_time As Label
     Friend WithEvents Label2 As Label
 End Class

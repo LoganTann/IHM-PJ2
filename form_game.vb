@@ -2,17 +2,15 @@
 
 Public Class form_game
 
-
     Private Const NBR_CARD_TYPES = 5, NBR_SAME_CARDS = 4
     Private allImages(NBR_CARD_TYPES - 1) As Image
     Private imageBackCard As Image
     Private allLabels(NBR_CARD_TYPES * NBR_SAME_CARDS - 1) As Label
-    Private lastCart As String
+    Private lastCard As String
     Private compteurCartesTrouvées As Integer = 0
     Private compteurTypesCartesTrouvée As Integer = 0
-    Private timerDémarée As Boolean = False
-    Private WithEvents timer1 As New Timer(1000)
-
+    Private WithEvents timer1 As New System.Windows.Forms.Timer()
+    Private remainingTime As Integer = 60
 
 
     ' METHODES D'INITIALISATION ------------------------------------------------------------------------------------------------
@@ -21,11 +19,15 @@ Public Class form_game
     ''' Initialise le tableau allImages
     ''' </summary>
     Private Sub loadAllImages()
-        For i As Integer = 0 To allImages.Length - 1
-            allImages(i) = Image.FromFile(GameUtils.getFile($"images\Card{i}.png"))
-        Next
-        imageBackCard = Image.FromFile(GameUtils.getFile($"images\BackCard.png"))
-
+        Try
+            For i As Integer = 0 To allImages.Length - 1
+                allImages(i) = Image.FromFile(GameUtils.getFile($"images\Card{i}.png"))
+            Next
+            imageBackCard = Image.FromFile(GameUtils.getFile($"images\BackCard.png"))
+        Catch ex As System.IO.FileNotFoundException
+            MsgBox("Erreur lors du chargement des images. Ce projet est (pour le moment) conçu pour être démarré dans le dossier Debug ou Release de VisualStudio, les assets se trouvant dans la racine du projet. Information sur l'erreur : " &
+                   vbNewLine & ex.Message(), MsgBoxStyle.Critical, "Impossible de poursuivre...")
+        End Try
     End Sub
 
     ''' <summary>
@@ -59,11 +61,11 @@ Public Class form_game
         Next
     End Sub
 
-    ' EVENTS EFFECTIFS ----------------------------------------------------------------------------------------------------
+    ' EVENTS OU METHODES D'ACTION ----------------------------------------------------------------------------------------------------
     ''' <summary>
     ''' Porte d'entrée du formulaire
     ''' </summary>
-    Private Sub form_game_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub onLoad(sender As Object, e As EventArgs) Handles Me.Load
         ' phase d'initialisation
         loadAllImages()
         loadAllCardLabels()
@@ -72,103 +74,133 @@ Public Class form_game
         timer1.Interval = 1000
 
         ' TODO : initialiser le nom du joueur
-        ' TODO : initialiser le timer
     End Sub
 
-    Private Sub Timer1_Tick(sender As Object, e As System.EventArgs) Handles timer1.Elapsed
-        ' ceci s'exécute toutes les secondes
+    Private Sub onEachSecs(sender As Object, e As System.EventArgs) Handles timer1.Tick
+        remainingTime -= 1
+        lbl_time.Text = secsToStr(remainingTime, "mm:ss")
+
+        If (remainingTime <= 0) Then
+            onGameFinished()
+        ElseIf (remainingTime <= 10) Then
+            lbl_time.ForeColor = Color.Red
+        End If
     End Sub
 
-    Private Sub onCardClick(sender As Object, e As EventArgs)
-        ' TODO : Logique de jeu
-        ' désactiver une carte (juste pour __tester__ et voir si l'event est triggered)
-        ' sender.Enabled = False
-
-        If timerDémarée = False Then
-            timerDémarée = True
+    ''' <summary>
+    ''' Action lorsqu'une carte est cliquée. La principale logique du jeu est ici, ce n'est pas forcément l'implémentation la plus élégante ou optimisée
+    ''' mais on a tenté d'implémenter ce qu'on ferait dans notre tête si c'était une partie physique
+    ''' </summary>
+    Private Sub onCardClick(clickedCard As Label, e As EventArgs)
+        ' (démarre le timer si ce n'est pas encore le cas, ie. une fois la première carte retournée)
+        If Not timer1.Enabled Then
             timer1.Enabled = True
             timer1.Start()
-
         End If
 
-        If Not sender.Image.Equals(imageBackCard) Then
+        ' retourne la carte, mais si déjà révélée, pas la peine d'aller plus loin le coup est invalide
+        If clickedCard.Image.Equals(imageBackCard) Then
+            clickedCard.Image = allImages(clickedCard.Name)
+        Else
             Exit Sub
         End If
 
-        If compteurCartesTrouvées > 0 Then
-            If sender.Name.Equals(lastCart) Then
-                compteurCartesTrouvées += 1
+        ' Si la carte est différente de la carte précédente retournée
+        If compteurCartesTrouvées > 0 And Not clickedCard.Name.Equals(lastCard) Then
+            ' dévoile la carte, mets en pause le thread en pensant à re-paint le formulaire avant l'interruption
+            Me.Refresh()
+            Thread.Sleep(1000)
 
-            Else
-
-                sender.image = allImages(sender.Name)
-
-                Me.Refresh()
-
-                Thread.Sleep(1000)
-
-                For Each lbl As Label In cards_container.Controls
-                    If lbl.Enabled = True Then
-                        If Not lbl.Image.Equals(imageBackCard) Then
-                            lbl.Image = imageBackCard
-                        End If
-
-                    End If
-
-                Next
-
-                compteurCartesTrouvées = 0
-
-                Exit Sub
-
-            End If
-        Else
-            compteurCartesTrouvées = 1
+            flipAllRevealedCards()
+            compteurCartesTrouvées = 0
+            Exit Sub
+        Else ' Sinon on update juste les valeurs de vérifications
+            compteurCartesTrouvées += 1
+            lastCard = clickedCard.Name
         End If
 
-        lastCart = sender.Name
-
-
-        If compteurCartesTrouvées = 4 Then
-            For Each lbl As Label In cards_container.Controls
-                If lbl.Name.Equals(lastCart) Then
-                    lbl.Enabled = False
-                End If
-
-            Next
+        ' Si toutes les cartes du même type ont été révélées
+        If compteurCartesTrouvées = NBR_SAME_CARDS Then
+            disableAllCardsOfType(lastCard)
             compteurCartesTrouvées = 0
             compteurTypesCartesTrouvée += 1
         End If
 
-        If compteurTypesCartesTrouvée = 5 Then
-            MsgBox("Vous avez avez gagné la partie")
+        ' Si tous les types ont été trouvés : gagné !
+        If compteurTypesCartesTrouvée = NBR_CARD_TYPES Then
+            onGameFinished()
         End If
 
 
-        sender.image = allImages(sender.Name)
-
+        ' clickedCard.Image = allImages(clickedCard.Name)
     End Sub
 
-    ' TODO : Lorsque le jeu est fini, enregistrer le score si nécessaire + affichages.
+    Private Sub onGameFinished()
+        timer1.Enabled = False
 
+        Dim stats As String = "Statistiques de fin de partie : "
+        stats &= "Temps passé: " & secsToStr(remainingTime, "mm min ss") & vbNewLine
+        stats &= "Nombre de paires trouvées : " & compteurTypesCartesTrouvée
+        MsgBox(stats)
+
+        ' TODO : Lorsque le jeu est fini, enregistrer le score si nécessaire + affichages.
+
+        exitToMenu()
+    End Sub
+
+    ''' <summary> Au clic du bouton rouge natif de fermeture </summary>
+    Private Sub ConfirmClose_native(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
+        e.Cancel = True
+        ConfirmClose()
+    End Sub
+    ''' <summary> Au clic du bouton "quitter" </summary>
+    Private Sub ConfirmClose_btn(sender As Object, e As EventArgs) Handles Button1.Click
+        ConfirmClose()
+    End Sub
+
+
+    ' METHODES UTILITAIRES ------------------------------------------------------------------------------------------------
+
+    ''' <summary>
+    ''' Ferme le formulaire courant, et ouvre form_home
+    ''' </summary>
+    Private Sub exitToMenu()
+        Me.Hide() ' Quitte le form courant
+        Dim accueil As New form_home() ' récupère le menu
+        accueil.Show() ' l'affiche
+    End Sub
 
     ' Confirmation de fermeture
     Private Const CLOSE_CONFIRM_MSG = "Voulez-vous vraiment abandonner la partie en cours ?"
     Private Sub ConfirmClose()
         ' Bouton de confirmation
         If (GameUtils.confirm(CLOSE_CONFIRM_MSG)) Then
-            Me.Hide() ' Quitte le form courant
-            Dim accueil As New form_home() ' récupère le menu
-            accueil.Show() ' l'affiche
+            exitToMenu()
         End If
     End Sub
-    Private Sub ConfirmClose_native(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
-        ' Au clic du bouton rouge natif de fermeture
-        e.Cancel = True
-        ConfirmClose()
+
+    Private Sub disableAllCardsOfType(cardType As String)
+        For Each lbl As Label In cards_container.Controls
+            If lbl.Name.Equals(cardType) Then
+                lbl.Enabled = False
+            End If
+        Next
     End Sub
-    Private Sub ConfirmClose_btn(sender As Object, e As EventArgs) Handles Button1.Click
-        ' Au clic du bouton "quitter"
-        ConfirmClose()
+
+    ''' <summary>
+    ''' cache chaque cartes révélées et non grisées du container
+    ''' </summary>
+    Private Sub flipAllRevealedCards()
+        For Each lbl As Label In cards_container.Controls
+            If lbl.Enabled And Not lbl.Image.Equals(imageBackCard) Then
+                lbl.Image = imageBackCard
+            End If
+        Next
     End Sub
+
+    Private Function secsToStr(time As Integer, template As String) As String
+        Dim ss As Integer = time Mod 60
+        Dim mm As Integer = (time - ss) / 60
+        Return template.Replace("ss", ss).Replace("mm", mm)
+    End Function
 End Class
