@@ -1,9 +1,18 @@
-﻿Public Class form_game
+﻿Imports System.Threading
+
+Public Class form_game
 
 
     Private Const NBR_CARD_TYPES = 5, NBR_SAME_CARDS = 4
     Private allImages(NBR_CARD_TYPES - 1) As Image
+    Private imageBackCard As Image
     Private allLabels(NBR_CARD_TYPES * NBR_SAME_CARDS - 1) As Label
+    Private lastCart As String
+    Private compteurCartesTrouvées As Integer = 0
+    Private compteurTypesCartesTrouvée As Integer = 0
+    Private timerDémarée As Boolean = False
+    Private WithEvents timer1 As New Timer(1000)
+
 
 
     ' METHODES D'INITIALISATION ------------------------------------------------------------------------------------------------
@@ -15,6 +24,8 @@
         For i As Integer = 0 To allImages.Length - 1
             allImages(i) = Image.FromFile(GameUtils.getFile($"images\Card{i}.png"))
         Next
+        imageBackCard = Image.FromFile(GameUtils.getFile($"images\BackCard.png"))
+
     End Sub
 
     ''' <summary>
@@ -29,7 +40,7 @@
                 AddHandler allLabels(i).Click, AddressOf onCardClick
                 ' Un peu de customisation : 
                 With allLabels(i)
-                    .Image = allImages(row)
+                    .Image = imageBackCard
                     .Size = allImages(row).Size
                     .Text = ""
                     .AutoSize = False
@@ -58,14 +69,84 @@
         loadAllCardLabels()
         printAllCardLabels()
 
+        timer1.Interval = 1000
+
         ' TODO : initialiser le nom du joueur
         ' TODO : initialiser le timer
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As System.EventArgs) Handles timer1.Elapsed
+        ' ceci s'exécute toutes les secondes
     End Sub
 
     Private Sub onCardClick(sender As Object, e As EventArgs)
         ' TODO : Logique de jeu
         ' désactiver une carte (juste pour __tester__ et voir si l'event est triggered)
-        sender.Enabled = False
+        ' sender.Enabled = False
+
+        If timerDémarée = False Then
+            timerDémarée = True
+            timer1.Enabled = True
+            timer1.Start()
+
+        End If
+
+        If Not sender.Image.Equals(imageBackCard) Then
+            Exit Sub
+        End If
+
+        If compteurCartesTrouvées > 0 Then
+            If sender.Name.Equals(lastCart) Then
+                compteurCartesTrouvées += 1
+
+            Else
+
+                sender.image = allImages(sender.Name)
+
+                Me.Refresh()
+
+                Thread.Sleep(1000)
+
+                For Each lbl As Label In cards_container.Controls
+                    If lbl.Enabled = True Then
+                        If Not lbl.Image.Equals(imageBackCard) Then
+                            lbl.Image = imageBackCard
+                        End If
+
+                    End If
+
+                Next
+
+                compteurCartesTrouvées = 0
+
+                Exit Sub
+
+            End If
+        Else
+            compteurCartesTrouvées = 1
+        End If
+
+        lastCart = sender.Name
+
+
+        If compteurCartesTrouvées = 4 Then
+            For Each lbl As Label In cards_container.Controls
+                If lbl.Name.Equals(lastCart) Then
+                    lbl.Enabled = False
+                End If
+
+            Next
+            compteurCartesTrouvées = 0
+            compteurTypesCartesTrouvée += 1
+        End If
+
+        If compteurTypesCartesTrouvée = 5 Then
+            MsgBox("Vous avez avez gagné la partie")
+        End If
+
+
+        sender.image = allImages(sender.Name)
+
     End Sub
 
     ' TODO : Lorsque le jeu est fini, enregistrer le score si nécessaire + affichages.
