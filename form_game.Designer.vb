@@ -22,7 +22,7 @@ Partial Class form_game
     'Ne la modifiez pas à l'aide de l'éditeur de code.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.quitBtn = New System.Windows.Forms.Button()
         Me.cards_container = New System.Windows.Forms.FlowLayoutPanel()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.lbl_constProfile = New System.Windows.Forms.Label()
@@ -33,12 +33,12 @@ Partial Class form_game
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(287, 12)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 1
-        Me.Button1.Text = "Abandon"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.quitBtn.Location = New System.Drawing.Point(287, 12)
+        Me.quitBtn.Name = "Button1"
+        Me.quitBtn.Size = New System.Drawing.Size(75, 23)
+        Me.quitBtn.TabIndex = 1
+        Me.quitBtn.Text = "Abandon"
+        Me.quitBtn.UseVisualStyleBackColor = True
         '
         'cards_container
         '
@@ -104,7 +104,7 @@ Partial Class form_game
         Me.Controls.Add(Me.lbl_constProfile)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.cards_container)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.quitBtn)
         Me.Name = "form_game"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "form_game"
@@ -112,7 +112,7 @@ Partial Class form_game
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents Button1 As Button
+    Friend WithEvents quitBtn As Button
     Friend WithEvents cards_container As FlowLayoutPanel
     Friend WithEvents Button2 As Button
     Friend WithEvents lbl_constProfile As Label

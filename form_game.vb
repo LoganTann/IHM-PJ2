@@ -53,23 +53,31 @@ Public Class form_game
         Next
     End Sub
     ''' <summary>
-    ''' Affiche les cartes dans le formulaire. Sera utile si jamais on veut activer le random ou pas.
+    ''' Ajoute les cartes (labels) préchargées au sein du flowLayoutPanel présent dans le formulaire, de manière tirée
     ''' </summary>
-    Private Sub printAllCardLabels()
+    Private Sub printAllCardLabels_sorted()
         For Each lbl As Label In allLabels
             cards_container.Controls.Add(lbl) ' assez verbeux pour comprendre ce que ça fait
         Next
     End Sub
 
-    ' EVENTS OU METHODES D'ACTION ----------------------------------------------------------------------------------------------------
+    ''' <summary>
+    ''' printAllCardLabels_sorted mais de manière random
+    ''' </summary>
+    Private Sub printAllCardLabels_random()
+        ' allLabels
+        ' cards_container.Controls.Add()
+    End Sub
+
+    ' EVENTS ----------------------------------------------------------------------------------------------------
     ''' <summary>
     ''' Porte d'entrée du formulaire
     ''' </summary>
-    Private Sub onLoad(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub onFormLoad(sender As Object, e As EventArgs) Handles Me.Load
         ' phase d'initialisation
         loadAllImages()
         loadAllCardLabels()
-        printAllCardLabels()
+        printAllCardLabels_sorted()
 
         timer1.Interval = 1000
 
@@ -124,15 +132,12 @@ Public Class form_game
             disableAllCardsOfType(lastCard)
             compteurCartesTrouvées = 0
             compteurTypesCartesTrouvée += 1
+
+            ' Si tous les types ont été trouvés : gagné !
+            If compteurTypesCartesTrouvée = NBR_CARD_TYPES Then
+                onGameFinished()
+            End If
         End If
-
-        ' Si tous les types ont été trouvés : gagné !
-        If compteurTypesCartesTrouvée = NBR_CARD_TYPES Then
-            onGameFinished()
-        End If
-
-
-        ' clickedCard.Image = allImages(clickedCard.Name)
     End Sub
 
     Private Sub onGameFinished()
@@ -144,17 +149,17 @@ Public Class form_game
         MsgBox(stats)
 
         ' TODO : Lorsque le jeu est fini, enregistrer le score si nécessaire + affichages.
-
+        ' Interface via GameStorage
         exitToMenu()
     End Sub
 
     ''' <summary> Au clic du bouton rouge natif de fermeture </summary>
-    Private Sub ConfirmClose_native(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
+    Private Sub onFormClosing(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
         e.Cancel = True
         ConfirmClose()
     End Sub
     ''' <summary> Au clic du bouton "quitter" </summary>
-    Private Sub ConfirmClose_btn(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub onQuitbtnClick(sender As Object, e As EventArgs) Handles quitBtn.Click
         ConfirmClose()
     End Sub
 
@@ -170,14 +175,17 @@ Public Class form_game
         accueil.Show() ' l'affiche
     End Sub
 
-    ' Confirmation de fermeture
-    Private Const CLOSE_CONFIRM_MSG = "Voulez-vous vraiment abandonner la partie en cours ?"
+
+    ''' <summary>
+    ''' Affiche une boite de confirmation de fermeture, et appelle exitToMenu() si clique sur OK.
+    ''' </summary>
     Private Sub ConfirmClose()
         ' Bouton de confirmation
         If (GameUtils.confirm(CLOSE_CONFIRM_MSG)) Then
             exitToMenu()
         End If
     End Sub
+    Private Const CLOSE_CONFIRM_MSG = "Voulez-vous vraiment abandonner la partie en cours ?"
 
     Private Sub disableAllCardsOfType(cardType As String)
         For Each lbl As Label In cards_container.Controls
@@ -198,6 +206,13 @@ Public Class form_game
         Next
     End Sub
 
+    ''' <summary>
+    ''' Donné une valeur en secondes, convertis en minutes/secondes selon le template mis en paramètre.
+    ''' Ex : donné 90 secs et la chaine "mm minutes et ss secondes", retourne "1 minutes et 30 secondes" 
+    ''' </summary>
+    ''' <param name="time">Le temps en secondes. Cette fonction est conçue pour un maximum de 3599 secondes (59 minutes 59 secs)</param>
+    ''' <param name="template">Une chaine de caractères où l'occurence "mm" sera remplacée par la valeur des minutes, et "ss" sera remplacée par la valeur des secondes</param>
+    ''' <returns>(time, template) => template.Replace("ss", time Mod 60).Replace("mm",  (time - (time Mod 60)) / 60)</returns>
     Private Function secsToStr(time As Integer, template As String) As String
         Dim ss As Integer = time Mod 60
         Dim mm As Integer = (time - ss) / 60
