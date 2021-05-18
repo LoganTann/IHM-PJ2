@@ -5,14 +5,19 @@
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' TODO : Système de chargement des sauvegardes via fichier
         ComboBox_name.DropDownStyle = ComboBoxStyle.DropDown
+        GameStorage.init()
+
+        For Each nom As String In GameStorage.listeNoms()
+            ComboBox_name.Items.Add(nom)
+        Next
     End Sub
 
     ''' <summary>
     ''' Démarrage de partie. Assume que le nom est valide.
     ''' </summary>
     Private Sub btn_play_Click(sender As Object, e As EventArgs) Handles btn_play.Click
-        ' TODO : identifier le joueur avec son profil associé. Si il existe pas, un nouveau profil devra être créé
-        ' TODO : faire passer le profil du joueur vers le formulaire de jeu
+        GameStorage.setPlayerName(ComboBox_name.Text)
+
         Me.Hide()
         Dim newGame As New form_game()
         newGame.Show()

@@ -32,8 +32,57 @@
     End Structure
 
 
-    Private tabJoueurs As Joueur()
+    Private tabJoueurs As New List(Of Joueur)
+    Private stockageParamètres As Paramètres
+    Private joueurCourant As Joueur
+    Private hasInit As Boolean = False
 
+    Public Sub init()
+        If (hasInit) Then
+            Exit Sub
+        End If
+        hasInit = True
+        addProfile("Logan")
+        addProfile("Sofiane")
+        addProfile("Lucas")
+    End Sub
 
+    Public Function addProfile(nom As String)
+        Dim nouveauJoueur As Joueur
+        With nouveauJoueur
+            .Nom = nom
+            .nbrMaxCarréTrouvés = 0
+            .tempsMin = 0
+            .cumulTmpJeu = 0
+        End With
+        tabJoueurs.Add(nouveauJoueur)
+        Return nouveauJoueur
+    End Function
+
+    Public Function listeNoms() As List(Of String)
+        Dim returnValue As New List(Of String)
+        For Each j As Joueur In tabJoueurs
+            returnValue.Add(j.Nom)
+        Next
+        Return returnValue
+    End Function
+
+    Public Sub setPlayerName(s As String)
+        Dim NameExists As Boolean = False
+        For Each j As Joueur In tabJoueurs
+            If (j.Nom.Equals(s)) Then
+                NameExists = True
+                joueurCourant = j
+            End If
+        Next
+        If (Not NameExists) Then
+            joueurCourant = addProfile(s)
+        End If
+    End Sub
+
+    Public Function getPlayerName()
+        ' TODO vérifier si bien init
+        Return joueurCourant.Nom
+    End Function
 
 End Module

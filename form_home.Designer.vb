@@ -47,7 +47,6 @@ Partial Class form_home
         'ComboBox_name
         '
         Me.ComboBox_name.FormattingEnabled = True
-        Me.ComboBox_name.Items.AddRange(New Object() {"foo", "bar", "baz"})
         Me.ComboBox_name.Location = New System.Drawing.Point(31, 64)
         Me.ComboBox_name.Name = "ComboBox_name"
         Me.ComboBox_name.Size = New System.Drawing.Size(167, 21)

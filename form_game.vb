@@ -81,7 +81,8 @@ Public Class form_game
 
         timer1.Interval = 1000
 
-        ' TODO : initialiser le nom du joueur
+        lbl_profile.Text = GameStorage.getPlayerName()
+        lbl_time.Text = secsToStr(remainingTime, "mm:ss")
     End Sub
 
     Private Sub onEachSecs(sender As Object, e As System.EventArgs) Handles timer1.Tick
