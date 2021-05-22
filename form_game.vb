@@ -154,6 +154,8 @@ Public Class form_game
 
         GameStorage.updateCurrentPlayerScore(ALLOWED_TIME - remainingTime, compteurTypesCartesTrouvée, lastFoundTime)
 
+        GameStorage.Sauvegarder()
+
         exitToMenu()
     End Sub
 

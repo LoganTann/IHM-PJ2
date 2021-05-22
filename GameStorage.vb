@@ -1,4 +1,6 @@
-﻿Module GameStorage
+﻿Imports System.Xml
+
+Module GameStorage
     ' TODO : Ceci doit garder en mémoire les __paramètres du jeux__ et l'ensemble des __joueurs__
 
     ' TODO : fonction pour sauvegarder ou charger les paramètres sur un fichier
@@ -44,9 +46,8 @@
             Exit Sub
         End If
         hasInit = True
-        addProfile("Logan")
-        addProfile("Sofiane")
-        addProfile("Lucas")
+        Charger()
+        ' TODO comportement si aucun fichier n'a été trouvé
     End Sub
 
     Public Function getTabJoueurs() As List(Of Joueur)
@@ -109,7 +110,62 @@
         tabJoueurs(idJoueurCourant) = joueurCourant
     End Sub
 
+    Public Sub Sauvegarder()
+        Dim fichierDeSauvegarde As XmlDocument = New XmlDocument()
+        fichierDeSauvegarde.LoadXml("<jeu></jeu>")
+        Dim balise_joueurs As XmlElement
+        balise_joueurs = fichierDeSauvegarde.CreateElement("joueurs")
 
+        For Each j As Joueur In tabJoueurs
+            Dim balise_joueur As XmlElement
+            Dim balise_nom As XmlElement
+            Dim balise_tempsCumul As XmlElement
+            Dim balise_paires As XmlElement
+            Dim balise_tempsAssocie As XmlElement
+            balise_joueur = fichierDeSauvegarde.CreateElement("joueur")
+            balise_nom = fichierDeSauvegarde.CreateElement("nom")
+            balise_tempsCumul = fichierDeSauvegarde.CreateElement("tempsCumul")
+            balise_paires = fichierDeSauvegarde.CreateElement("paires")
+            balise_tempsAssocie = fichierDeSauvegarde.CreateElement("tempsAssocie")
+
+            balise_nom.InnerText = j.Nom
+            balise_tempsCumul.InnerText = j.cumulTmpJeu
+            balise_paires.InnerText = j.nbrMaxCarréTrouvés
+            balise_tempsAssocie.InnerText = j.tempsMin
+
+            balise_joueur.AppendChild(balise_nom)
+            balise_joueur.AppendChild(balise_tempsCumul)
+            balise_joueur.AppendChild(balise_paires)
+            balise_joueur.AppendChild(balise_tempsAssocie)
+            balise_joueurs.AppendChild(balise_joueur)
+        Next
+        fichierDeSauvegarde.DocumentElement.AppendChild(balise_joueurs)
+        fichierDeSauvegarde.Save(GameUtils.CD() + "\sauvegarde.XML")
+    End Sub
+
+    Public Sub Charger()
+        Dim fichierDeSauvegarde As XmlDocument = New XmlDocument()
+        fichierDeSauvegarde.Load(GameUtils.CD() + "\sauvegarde.XML")
+
+        Dim balises_joueur As XmlNodeList
+        balises_joueur = fichierDeSauvegarde.DocumentElement.GetElementsByTagName("joueur")
+        For Each uneBalise_joueur In balises_joueur
+            Dim joueurCharge As New Joueur
+            For Each infosJoueur In uneBalise_joueur.ChildNodes
+                Select Case infosJoueur.LocalName
+                    Case "nom"
+                        joueurCharge.Nom = infosJoueur.InnerText
+                    Case "tempsCumul"
+                        joueurCharge.cumulTmpJeu = infosJoueur.InnerText
+                    Case "paires"
+                        joueurCharge.nbrMaxCarréTrouvés = infosJoueur.InnerText
+                    Case "tempsAssocie"
+                        joueurCharge.tempsMin = infosJoueur.InnerText
+                End Select
+            Next
+            tabJoueurs.Add(joueurCharge)
+        Next
+    End Sub
 
     Public Function getPlayerName()
         ' TODO vérifier si bien init

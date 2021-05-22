@@ -3,7 +3,6 @@
     ''' Initialisation du formulaire
     ''' </summary>
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' TODO : Système de chargement des sauvegardes via fichier
         ComboBox_name.DropDownStyle = ComboBoxStyle.DropDown
         GameStorage.init()
 

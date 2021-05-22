@@ -23,4 +23,8 @@ Module GameUtils
             Return rawCD + "\" + filePath
         End If
     End Function
+
+    Public Function CD() As String
+        Return Directory.GetCurrentDirectory()
+    End Function
 End Module
