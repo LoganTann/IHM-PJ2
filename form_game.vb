@@ -10,7 +10,9 @@ Public Class form_game
     Private compteurCartesTrouvées As Integer = 0
     Private compteurTypesCartesTrouvée As Integer = 0
     Private WithEvents timer1 As New System.Windows.Forms.Timer()
-    Private remainingTime As Integer = 60
+    Private Const ALLOWED_TIME As Integer = 10
+    Private remainingTime As Integer = ALLOWED_TIME
+    Private lastFoundTime As Integer = ALLOWED_TIME
 
 
     ' METHODES D'INITIALISATION ------------------------------------------------------------------------------------------------
@@ -18,15 +20,20 @@ Public Class form_game
     ''' <summary>
     ''' Initialise le tableau allImages
     ''' </summary>
-    Private Sub loadAllImages()
+    Private Sub loadAllImages(shouldReplace As Boolean)
         Try
             For i As Integer = 0 To allImages.Length - 1
-                allImages(i) = Image.FromFile(GameUtils.getFile($"images\Card{i}.png"))
+                allImages(i) = Image.FromFile(GameUtils.getFile($"images\Card{i}.png", shouldReplace))
             Next
-            imageBackCard = Image.FromFile(GameUtils.getFile($"images\BackCard.png"))
-        Catch ex As System.IO.FileNotFoundException
-            MsgBox("Erreur lors du chargement des images. Ce projet est (pour le moment) conçu pour être démarré dans le dossier Debug ou Release de VisualStudio, les assets se trouvant dans la racine du projet. Information sur l'erreur : " &
-                   vbNewLine & ex.Message(), MsgBoxStyle.Critical, "Impossible de poursuivre...")
+            imageBackCard = Image.FromFile(GameUtils.getFile($"images\BackCard.png", shouldReplace))
+        Catch ex1 As System.IO.FileNotFoundException
+            If (shouldReplace) Then
+                loadAllImages(False)
+            Else
+                MsgBox("Erreur lors du chargement des images. Nous avons tout fait pour chercher mais nous n'avons pas trouvé le fichier : " &
+                vbNewLine & ex1.Message(), MsgBoxStyle.Critical, "Impossible de poursuivre...")
+                exitToMenu() ' TODO : ne dois pas afficher seconde erreur
+            End If
         End Try
     End Sub
 
@@ -75,7 +82,7 @@ Public Class form_game
     ''' </summary>
     Private Sub onFormLoad(sender As Object, e As EventArgs) Handles Me.Load
         ' phase d'initialisation
-        loadAllImages()
+        loadAllImages(True)
         loadAllCardLabels()
         printAllCardLabels_sorted()
 
@@ -133,6 +140,7 @@ Public Class form_game
             disableAllCardsOfType(lastCard)
             compteurCartesTrouvées = 0
             compteurTypesCartesTrouvée += 1
+            lastFoundTime = ALLOWED_TIME - remainingTime
 
             ' Si tous les types ont été trouvés : gagné !
             If compteurTypesCartesTrouvée = NBR_CARD_TYPES Then
@@ -145,8 +153,9 @@ Public Class form_game
         timer1.Enabled = False
 
         Dim stats As String = "Statistiques de fin de partie : "
-        stats &= "Temps passé: " & secsToStr(remainingTime, "mm min ss") & vbNewLine
-        stats &= "Nombre de paires trouvées : " & compteurTypesCartesTrouvée
+        stats &= "Temps de jeu: " & secsToStr(ALLOWED_TIME - remainingTime, "mm min ss") & vbNewLine
+        stats &= "Nombre de paires trouvées : " & compteurTypesCartesTrouvée & vbNewLine
+        stats &= "Temps associé à la dernière paire trouvée: " & secsToStr(lastFoundTime, "mm min ss")
         MsgBox(stats)
 
         ' TODO : Lorsque le jeu est fini, enregistrer le score si nécessaire + affichages.
@@ -155,7 +164,7 @@ Public Class form_game
     End Sub
 
     ''' <summary> Au clic du bouton rouge natif de fermeture </summary>
-    Private Sub onFormClosing(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
+    Private Sub onWindowClosing(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
         e.Cancel = True
         ConfirmClose()
     End Sub

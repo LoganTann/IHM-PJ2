@@ -14,9 +14,13 @@ Module GameUtils
     ''' <summary>fonction statique transformant un chemin relatif au dossier de projet en chemin absolu. Doit être démarré sur VS2019</summary>
     ''' <param name="filePath">Le chemin relatif au dossier du projet en format windows</param>
     ''' <returns>littéralement Directory.GetCurrentDirectory().Replace("\bin\Debug", "\").Replace("\bin\Release", "\") + filePath</returns>
-    Public Function getFile(filePath As String) As String
+    Public Function getFile(filePath As String, replace As Boolean) As String
         Dim rawCD As String = Directory.GetCurrentDirectory()
-        Dim newCD = rawCD.Replace("\bin\Debug", "\").Replace("\bin\Release", "\")
-        Return newCD + filePath
+        If (replace) Then
+            Dim newCD = rawCD.Replace("\bin\Debug", "\").Replace("\bin\Release", "\")
+            Return newCD + filePath
+        Else
+            Return rawCD + "\" + filePath
+        End If
     End Function
 End Module
