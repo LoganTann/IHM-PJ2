@@ -152,14 +152,8 @@ Public Class form_game
     Private Sub onGameFinished()
         timer1.Enabled = False
 
-        Dim stats As String = "Statistiques de fin de partie : "
-        stats &= "Temps de jeu: " & secsToStr(ALLOWED_TIME - remainingTime, "mm min ss") & vbNewLine
-        stats &= "Nombre de paires trouvées : " & compteurTypesCartesTrouvée & vbNewLine
-        stats &= "Temps associé à la dernière paire trouvée: " & secsToStr(lastFoundTime, "mm min ss")
-        MsgBox(stats)
+        GameStorage.updateCurrentPlayerScore(ALLOWED_TIME - remainingTime, compteurTypesCartesTrouvée, lastFoundTime)
 
-        ' TODO : Lorsque le jeu est fini, enregistrer le score si nécessaire + affichages.
-        ' Interface via GameStorage
         exitToMenu()
     End Sub
 

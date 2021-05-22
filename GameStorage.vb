@@ -34,7 +34,9 @@
 
     Private tabJoueurs As New List(Of Joueur)
     Private stockageParamètres As Paramètres
-    Private joueurCourant As Joueur
+
+    Private idJoueurCourant As Integer
+
     Private hasInit As Boolean = False
 
     Public Sub init()
@@ -46,6 +48,10 @@
         addProfile("Sofiane")
         addProfile("Lucas")
     End Sub
+
+    Public Function getTabJoueurs() As List(Of Joueur)
+        Return tabJoueurs
+    End Function
 
     Public Function addProfile(nom As String)
         Dim nouveauJoueur As Joueur
@@ -69,20 +75,45 @@
 
     Public Sub setPlayerName(s As String)
         Dim NameExists As Boolean = False
+        Dim i As Integer = 0
         For Each j As Joueur In tabJoueurs
             If (j.Nom.Equals(s)) Then
                 NameExists = True
-                joueurCourant = j
+                idJoueurCourant = i
             End If
+            i += 1
         Next
         If (Not NameExists) Then
-            joueurCourant = addProfile(s)
+            idJoueurCourant = i
         End If
     End Sub
 
+    Public Sub updateCurrentPlayerScore(TempsTotalDeJeu As Integer, NombreDePairesTrouvees As Integer, TempsAssocié As Integer)
+        ' pour modifier un élément du tableau on doit copier cet element dans une variable locale 
+        ' puis redéfinir l'élément du tableau par la variable locale modifiée
+
+        Dim joueurCourant As Joueur = tabJoueurs(idJoueurCourant)
+        joueurCourant.cumulTmpJeu += TempsTotalDeJeu
+
+        If (NombreDePairesTrouvees > joueurCourant.nbrMaxCarréTrouvés) Then
+            ' Si paires supérieure : on mets à jour paires et son temps
+            joueurCourant.nbrMaxCarréTrouvés = NombreDePairesTrouvees
+            joueurCourant.tempsMin = TempsAssocié
+        ElseIf (NombreDePairesTrouvees = joueurCourant.nbrMaxCarréTrouvés) Then
+            ' Si paires identiques mais temps meilleur : modifier le temps
+            If (TempsAssocié > joueurCourant.tempsMin) Then
+                joueurCourant.tempsMin = TempsAssocié
+            End If
+        End If
+
+        tabJoueurs(idJoueurCourant) = joueurCourant
+    End Sub
+
+
+
     Public Function getPlayerName()
         ' TODO vérifier si bien init
-        Return joueurCourant.Nom
+        Return tabJoueurs(idJoueurCourant).Nom
     End Function
 
 End Module
