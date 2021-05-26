@@ -1,9 +1,7 @@
 ﻿Imports System.Xml
 
 Module GameStorage
-    ' TODO : Ceci doit garder en mémoire les __paramètres du jeux__ et l'ensemble des __joueurs__
-
-    ' TODO : fonction pour sauvegarder ou charger les paramètres sur un fichier
+    ' TODO : Ceci doit garder en mémoire les __paramètres du jeux__
 
     ' Stockage d'un joueur:
     ' - Nom,
@@ -85,6 +83,7 @@ Module GameStorage
             i += 1
         Next
         If (Not NameExists) Then
+            addProfile(s)
             idJoueurCourant = i
         End If
     End Sub
@@ -145,7 +144,16 @@ Module GameStorage
 
     Public Sub Charger()
         Dim fichierDeSauvegarde As XmlDocument = New XmlDocument()
-        fichierDeSauvegarde.Load(GameUtils.CD() + "\sauvegarde.XML")
+
+        Try
+            fichierDeSauvegarde.Load(GameUtils.CD() + "\sauvegarde.XML")
+        Catch ex As Exception
+            addProfile("Logan")
+            addProfile("Sofiane")
+            Sauvegarder()
+            Exit Sub
+        End Try
+
 
         Dim balises_joueur As XmlNodeList
         balises_joueur = fichierDeSauvegarde.DocumentElement.GetElementsByTagName("joueur")
@@ -168,8 +176,12 @@ Module GameStorage
     End Sub
 
     Public Function getPlayerName()
-        ' TODO vérifier si bien init
-        Return tabJoueurs(idJoueurCourant).Nom
+        Dim retval As String = "Houston, we have a problem"
+        Try
+            retval = tabJoueurs(idJoueurCourant).Nom
+        Catch ex As Exception
+        End Try
+        Return retval
     End Function
 
 End Module

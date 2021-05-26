@@ -14,6 +14,7 @@ Public Class form_game
     Private remainingTime As Integer = ALLOWED_TIME
     Private lastFoundTime As Integer = ALLOWED_TIME
 
+    Private forceClose As Boolean = False
 
     ' METHODES D'INITIALISATION ------------------------------------------------------------------------------------------------
 
@@ -32,7 +33,8 @@ Public Class form_game
             Else
                 MsgBox("Erreur lors du chargement des images. Nous avons tout fait pour chercher mais nous n'avons pas trouvé le fichier : " &
                 vbNewLine & ex1.Message(), MsgBoxStyle.Critical, "Impossible de poursuivre...")
-                exitToMenu() ' TODO : ne dois pas afficher seconde erreur
+                forceClose = True
+                exitToMenu()
             End If
         End Try
     End Sub
@@ -81,8 +83,10 @@ Public Class form_game
     ''' Porte d'entrée du formulaire
     ''' </summary>
     Private Sub onFormLoad(sender As Object, e As EventArgs) Handles Me.Load
+        forceClose = False
         ' phase d'initialisation
         loadAllImages(True)
+        If (forceClose) Then Exit Sub
         loadAllCardLabels()
         printAllCardLabels_sorted()
 
@@ -161,6 +165,7 @@ Public Class form_game
 
     ''' <summary> Au clic du bouton rouge natif de fermeture </summary>
     Private Sub onWindowClosing(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
+        If (forceClose) Then Exit Sub
         e.Cancel = True
         ConfirmClose()
     End Sub
@@ -176,9 +181,8 @@ Public Class form_game
     ''' Ferme le formulaire courant, et ouvre form_home
     ''' </summary>
     Private Sub exitToMenu()
-        Me.Hide() ' Quitte le form courant
-        Dim accueil As New form_home() ' récupère le menu
-        accueil.Show() ' l'affiche
+        Me.Close() ' Quitte le form courant
+        form_home.Show() ' l'affiche
     End Sub
 
 
