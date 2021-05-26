@@ -12,9 +12,10 @@ Public Class form_game
     Private forceClose As Boolean = False
     Private allowPause As Boolean = False
     Private inPause As Boolean = False
+    Private disableRandom = False
 
     ' nombre non positif = temps désactivé
-    Private Const ALLOWED_TIME As Integer = 10
+    Private Const ALLOWED_TIME As Integer = 60
     Private remainingTime As Integer = ALLOWED_TIME
     Private lastFoundTime As Integer = ALLOWED_TIME
     Private WithEvents timer1 As New System.Windows.Forms.Timer()
@@ -79,8 +80,20 @@ Public Class form_game
     ''' printAllCardLabels_sorted mais de manière random
     ''' </summary>
     Private Sub printAllCardLabels_random()
-        ' allLabels
-        ' cards_container.Controls.Add()
+        Dim randGenerator As System.Random = New System.Random()
+        Dim indexList As New List(Of Integer)
+        For index As Integer = 0 To allLabels.Length - 1
+            indexList.Add(index)
+        Next
+
+        ' On a une liste d'indices. On pique un au hasard pour savoir quoi afficher.
+        ' On aurait aussi pu juste stocker les labels dans une List au lieu d'un tableau natif mais il aurait fallu modifier de nouveau la base de code
+        While indexList.Count() > 0
+            Dim indexOfindexList As Integer = randGenerator.Next(indexList.Count() - 1)
+            Dim indexToPick As Integer = indexList(indexOfindexList)
+            cards_container.Controls.Add(allLabels(indexToPick))
+            indexList.RemoveAt(indexOfindexList)
+        End While
     End Sub
 
     ' EVENTS ----------------------------------------------------------------------------------------------------
@@ -95,7 +108,12 @@ Public Class form_game
         loadAllImages(True)
         If (forceClose) Then Exit Sub
         loadAllCardLabels()
-        printAllCardLabels_sorted()
+        If disableRandom Then
+            printAllCardLabels_sorted()
+        Else
+            printAllCardLabels_random()
+        End If
+
 
         timer1.Interval = 1000
 

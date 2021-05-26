@@ -14,18 +14,11 @@ Module GameStorage
         Public cumulTmpJeu As Integer
     End Structure
 
-
-    ' Stockage de paramètres : 
-    ' - réglage du temps alloué au joueur (0 pour désactiver) -> via un picker
-    ' - Thème utilisé -> ListBox 
-    ' - Chemin du fichier de sauvegarde (!) -> chemin
-    ' - Le pause sera par défaut
-
     Public Structure Paramètres
-        Public tempsMax As Integer
-        Public themeUtilise As String
-        Public cheminSauvegarde As String
-        Public pause As Boolean
+        Public allowedTime As Integer
+        Public allowPause As Boolean
+        Public disableRandom As Boolean
+        Public themeUtilise As String 'si jamais on a le temps
     End Structure
 
 
