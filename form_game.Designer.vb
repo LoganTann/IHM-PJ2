@@ -24,17 +24,18 @@ Partial Class form_game
     Private Sub InitializeComponent()
         Me.quitBtn = New System.Windows.Forms.Button()
         Me.cards_container = New System.Windows.Forms.FlowLayoutPanel()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.zaWarudo_btn = New System.Windows.Forms.Button()
         Me.lbl_constProfile = New System.Windows.Forms.Label()
         Me.lbl_profile = New System.Windows.Forms.Label()
         Me.lbl_time = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.pauseIndicator_lbl = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
-        'Button1
+        'quitBtn
         '
         Me.quitBtn.Location = New System.Drawing.Point(287, 12)
-        Me.quitBtn.Name = "Button1"
+        Me.quitBtn.Name = "quitBtn"
         Me.quitBtn.Size = New System.Drawing.Size(75, 23)
         Me.quitBtn.TabIndex = 1
         Me.quitBtn.Text = "Abandon"
@@ -47,15 +48,15 @@ Partial Class form_game
         Me.cards_container.Size = New System.Drawing.Size(515, 500)
         Me.cards_container.TabIndex = 4
         '
-        'Button2
+        'zaWarudo_btn
         '
-        Me.Button2.Location = New System.Drawing.Point(206, 11)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 24)
-        Me.Button2.TabIndex = 5
-        Me.Button2.Text = "pause (todo)"
-        Me.Button2.UseVisualStyleBackColor = True
-        Me.Button2.Visible = False
+        Me.zaWarudo_btn.Location = New System.Drawing.Point(206, 11)
+        Me.zaWarudo_btn.Name = "zaWarudo_btn"
+        Me.zaWarudo_btn.Size = New System.Drawing.Size(75, 24)
+        Me.zaWarudo_btn.TabIndex = 5
+        Me.zaWarudo_btn.Text = "Pause"
+        Me.zaWarudo_btn.UseVisualStyleBackColor = True
+        Me.zaWarudo_btn.Visible = False
         '
         'lbl_constProfile
         '
@@ -93,16 +94,30 @@ Partial Class form_game
         Me.Label2.TabIndex = 8
         Me.Label2.Text = "Temps restant : "
         '
+        'pauseIndicator_lbl
+        '
+        Me.pauseIndicator_lbl.BackColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.pauseIndicator_lbl.Font = New System.Drawing.Font("Impact", 26.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.pauseIndicator_lbl.ForeColor = System.Drawing.Color.White
+        Me.pauseIndicator_lbl.Location = New System.Drawing.Point(12, 233)
+        Me.pauseIndicator_lbl.Name = "pauseIndicator_lbl"
+        Me.pauseIndicator_lbl.Size = New System.Drawing.Size(533, 95)
+        Me.pauseIndicator_lbl.TabIndex = 10
+        Me.pauseIndicator_lbl.Text = "Jeu en pause"
+        Me.pauseIndicator_lbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.pauseIndicator_lbl.Visible = False
+        '
         'form_game
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(592, 559)
+        Me.ClientSize = New System.Drawing.Size(581, 559)
+        Me.Controls.Add(Me.pauseIndicator_lbl)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.lbl_time)
         Me.Controls.Add(Me.lbl_profile)
         Me.Controls.Add(Me.lbl_constProfile)
-        Me.Controls.Add(Me.Button2)
+        Me.Controls.Add(Me.zaWarudo_btn)
         Me.Controls.Add(Me.cards_container)
         Me.Controls.Add(Me.quitBtn)
         Me.Name = "form_game"
@@ -114,9 +129,10 @@ Partial Class form_game
     End Sub
     Friend WithEvents quitBtn As Button
     Friend WithEvents cards_container As FlowLayoutPanel
-    Friend WithEvents Button2 As Button
+    Friend WithEvents zaWarudo_btn As Button
     Friend WithEvents lbl_constProfile As Label
     Friend WithEvents lbl_profile As Label
     Friend WithEvents lbl_time As Label
     Friend WithEvents Label2 As Label
+    Friend WithEvents pauseIndicator_lbl As Label
 End Class

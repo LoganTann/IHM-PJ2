@@ -9,14 +9,16 @@ Public Class form_game
     Private lastCard As String
     Private compteurCartesTrouvées As Integer = 0
     Private compteurTypesCartesTrouvée As Integer = 0
-    Private WithEvents timer1 As New System.Windows.Forms.Timer()
+    Private forceClose As Boolean = False
+    Private allowPause As Boolean = False
+    Private inPause As Boolean = False
 
     ' nombre non positif = temps désactivé
     Private Const ALLOWED_TIME As Integer = 10
     Private remainingTime As Integer = ALLOWED_TIME
     Private lastFoundTime As Integer = ALLOWED_TIME
+    Private WithEvents timer1 As New System.Windows.Forms.Timer()
 
-    Private forceClose As Boolean = False
 
     ' METHODES D'INITIALISATION ------------------------------------------------------------------------------------------------
 
@@ -57,6 +59,7 @@ Public Class form_game
                     .Size = allImages(row).Size
                     .Text = ""
                     .AutoSize = False
+                    .Margin = New Padding(8, 2, 0, 0)
                     .Name = row ' pas prévu pour mais bon, tant que ça stocke le type d'image
                 End With
                 i += 1
@@ -86,6 +89,8 @@ Public Class form_game
     ''' </summary>
     Private Sub onFormLoad(sender As Object, e As EventArgs) Handles Me.Load
         forceClose = False
+        allowPause = True
+
         ' phase d'initialisation
         loadAllImages(True)
         If (forceClose) Then Exit Sub
@@ -99,7 +104,7 @@ Public Class form_game
         If remainingTime > 0 Then
             lbl_time.Text = secsToStr(remainingTime, "mm:ss")
         End If
-
+        zaWarudo_btn.Visible = allowPause
     End Sub
 
     Private Sub onEachSecs(sender As Object, e As System.EventArgs) Handles timer1.Tick
@@ -157,6 +162,18 @@ Public Class form_game
                 onGameFinished()
             End If
         End If
+    End Sub
+
+
+    ''' <summary>
+    ''' Is that a jojo reference ?
+    ''' </summary>
+    Private Sub onZaWarudo(sender As Object, e As EventArgs) Handles zaWarudo_btn.Click
+        cards_container.Enabled = inPause
+        lbl_time.Enabled = inPause
+        timer1.Enabled = inPause
+        inPause = Not inPause
+        pauseIndicator_lbl.Visible = inPause
     End Sub
 
     Private Sub onGameFinished()
