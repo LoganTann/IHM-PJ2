@@ -155,19 +155,23 @@ Public Class form_game
 
     Private Sub onGameFinished()
         timer1.Enabled = False
+        Dim playTime = ALLOWED_TIME - remainingTime
+        Dim stats As String
+        stats = $"Vous avez trouvé {compteurTypesCartesTrouvée} en moins de {secsToStr(playTime, "mmminutesss")} minutes" & vbNewLine
+        stats &= $"Votre partie a durée {secsToStr(playTime, "mmminutesss")}." & vbNewLine
+        MsgBox(stats, MsgBoxStyle.OkOnly, "Statistiques de la dernière partie")
 
-        GameStorage.updateCurrentPlayerScore(ALLOWED_TIME - remainingTime, compteurTypesCartesTrouvée, lastFoundTime)
-
+        GameStorage.updateCurrentPlayerScore(playTime, compteurTypesCartesTrouvée, lastFoundTime)
         GameStorage.Sauvegarder()
-
         exitToMenu()
     End Sub
 
     ''' <summary> Au clic du bouton rouge natif de fermeture </summary>
-    Private Sub onWindowClosing(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyClass.Closing
-        If (forceClose) Then Exit Sub
-        e.Cancel = True
-        ConfirmClose()
+    Private Sub onWindowClosing(ByVal sender As System.Object, ByVal e As FormClosingEventArgs) Handles MyClass.FormClosing
+        If (Not forceClose) Then
+            e.Cancel = True
+            ConfirmClose()
+        End If
     End Sub
     ''' <summary> Au clic du bouton "quitter" </summary>
     Private Sub onQuitbtnClick(sender As Object, e As EventArgs) Handles quitBtn.Click
@@ -181,6 +185,7 @@ Public Class form_game
     ''' Ferme le formulaire courant, et ouvre form_home
     ''' </summary>
     Private Sub exitToMenu()
+        forceClose = True
         Me.Close() ' Quitte le form courant
         form_home.Show() ' l'affiche
     End Sub
