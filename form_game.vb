@@ -10,6 +10,8 @@ Public Class form_game
     Private compteurCartesTrouvées As Integer = 0
     Private compteurTypesCartesTrouvée As Integer = 0
     Private WithEvents timer1 As New System.Windows.Forms.Timer()
+
+    ' nombre non positif = temps désactivé
     Private Const ALLOWED_TIME As Integer = 10
     Private remainingTime As Integer = ALLOWED_TIME
     Private lastFoundTime As Integer = ALLOWED_TIME
@@ -93,7 +95,11 @@ Public Class form_game
         timer1.Interval = 1000
 
         lbl_profile.Text = GameStorage.getPlayerName()
-        lbl_time.Text = secsToStr(remainingTime, "mm:ss")
+        lbl_time.Text = "Désactivé"
+        If remainingTime > 0 Then
+            lbl_time.Text = secsToStr(remainingTime, "mm:ss")
+        End If
+
     End Sub
 
     Private Sub onEachSecs(sender As Object, e As System.EventArgs) Handles timer1.Tick
@@ -113,7 +119,7 @@ Public Class form_game
     ''' </summary>
     Private Sub onCardClick(clickedCard As Label, e As EventArgs)
         ' (démarre le timer si ce n'est pas encore le cas, ie. une fois la première carte retournée)
-        If Not timer1.Enabled Then
+        If Not timer1.Enabled And remainingTime > 0 Then
             timer1.Enabled = True
             timer1.Start()
         End If
