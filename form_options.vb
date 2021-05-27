@@ -18,7 +18,7 @@
     End Sub
 
     Private Sub updateLabels()
-        labelTimer.Text = form_game.secsToStr(time, "mm:ss")
+        labelTimer.Text = GameUtils.secsToStr(time, "mm:ss")
 
         If time >= 180 Then
             ButtonIncrementTime.Enabled = False

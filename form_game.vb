@@ -1,22 +1,21 @@
 ﻿Imports System.Threading
 
 Public Class form_game
-
+    ' init
     Private Const NBR_CARD_TYPES = 5, NBR_SAME_CARDS = 4
     Private allImages(NBR_CARD_TYPES - 1) As Image
     Private imageBackCard As Image
     Private allLabels(NBR_CARD_TYPES * NBR_SAME_CARDS - 1) As Label
     Private lastCard As String
+    ' contrôle
     Private compteurCartesTrouvées As Integer = 0
     Private compteurTypesCartesTrouvée As Integer = 0
     Private forceClose As Boolean = False
     Private inPause As Boolean = False
-
-
+    ' options
     Private initialAllowedTime As Integer
     Private allowPause As Boolean
     Private disableRandom
-
     ' nombre non positif = temps désactivé
     Private remainingTime As Integer
     Private lastFoundTime As Integer
@@ -83,10 +82,7 @@ Public Class form_game
     ''' </summary>
     Private Sub printAllCardLabels_random()
         Dim randGenerator As System.Random = New System.Random()
-        Dim indexList As New List(Of Integer)
-        For index As Integer = 0 To allLabels.Length - 1
-            indexList.Add(index)
-        Next
+        Dim indexList As List(Of Integer) = generateListOfIndex(allLabels.Length)
 
         ' On a une liste d'indices. On pique un au hasard pour savoir quoi afficher.
         ' On aurait aussi pu juste stocker les labels dans une List au lieu d'un tableau natif mais il aurait fallu modifier de nouveau la base de code
@@ -127,14 +123,14 @@ Public Class form_game
         lbl_profile.Text = GameStorage.getPlayerName()
         lbl_time.Text = "Désactivé"
         If remainingTime > 0 Then
-            lbl_time.Text = secsToStr(remainingTime, "mm:ss")
+            lbl_time.Text = GameUtils.secsToStr(remainingTime, "mm:ss")
         End If
         zaWarudo_btn.Visible = allowPause
     End Sub
 
     Private Sub onEachSecs(sender As Object, e As System.EventArgs) Handles timer1.Tick
         remainingTime -= 1
-        lbl_time.Text = secsToStr(remainingTime, "mm:ss")
+        lbl_time.Text = GameUtils.secsToStr(remainingTime, "mm:ss")
 
         If (remainingTime <= 0) Then
             onGameFinished()
@@ -205,7 +201,7 @@ Public Class form_game
         timer1.Enabled = False
         Dim playTime = initialAllowedTime - remainingTime
         Dim stats As String
-        stats = $"Vous avez trouvé {compteurTypesCartesTrouvée} carrés en moins de {secsToStr(playTime, "mmmin ss")} minutes" & vbNewLine
+        stats = $"Vous avez trouvé {compteurTypesCartesTrouvée} carrés en moins de {GameUtils.secsToStr(playTime, "mmmin ss")} minutes" & vbNewLine
         MsgBox(stats, MsgBoxStyle.OkOnly, "Statistiques de la dernière partie")
 
         GameStorage.updateCurrentPlayerScore(playTime, compteurTypesCartesTrouvée, lastFoundTime)
@@ -268,17 +264,4 @@ Public Class form_game
             End If
         Next
     End Sub
-
-    ''' <summary>
-    ''' Donné une valeur en secondes, convertis en minutes/secondes selon le template mis en paramètre.
-    ''' Ex : donné 90 secs et la chaine "mm minutes et ss secondes", retourne "1 minutes et 30 secondes" 
-    ''' </summary>
-    ''' <param name="time">Le temps en secondes. Cette fonction est conçue pour un maximum de 3599 secondes (59 minutes 59 secs)</param>
-    ''' <param name="template">Une chaine de caractères où l'occurence "mm" sera remplacée par la valeur des minutes, et "ss" sera remplacée par la valeur des secondes</param>
-    ''' <returns>(time, template) => template.Replace("ss", time Mod 60).Replace("mm",  (time - (time Mod 60)) / 60)</returns>
-    Public Function secsToStr(time As Integer, template As String) As String
-        Dim ss As Integer = time Mod 60
-        Dim mm As Integer = (time - ss) / 60
-        Return template.Replace("ss", ss.ToString("D2")).Replace("mm", mm.ToString("D2"))
-    End Function
 End Class

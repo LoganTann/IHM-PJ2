@@ -27,4 +27,25 @@ Module GameUtils
     Public Function CD() As String
         Return Directory.GetCurrentDirectory()
     End Function
+
+    Public Function generateListOfIndex(Count As Integer) As List(Of Integer)
+        Dim indexList As New List(Of Integer)
+        For index As Integer = 0 To Count - 1
+            indexList.Add(index)
+        Next
+        Return indexList
+    End Function
+
+    ''' <summary>
+    ''' Donné une valeur en secondes, convertis en minutes/secondes selon le template mis en paramètre.
+    ''' Ex : donné 90 secs et la chaine "mm minutes et ss secondes", retourne "1 minutes et 30 secondes" 
+    ''' </summary>
+    ''' <param name="time">Le temps en secondes. Cette fonction est conçue pour un maximum de 3599 secondes (59 minutes 59 secs)</param>
+    ''' <param name="template">Une chaine de caractères où l'occurence "mm" sera remplacée par la valeur des minutes, et "ss" sera remplacée par la valeur des secondes</param>
+    ''' <returns>(time, template) => template.Replace("ss", time Mod 60).Replace("mm",  (time - (time Mod 60)) / 60)</returns>
+    Public Function secsToStr(time As Integer, template As String) As String
+        Dim ss As Integer = time Mod 60
+        Dim mm As Integer = (time - ss) / 60
+        Return template.Replace("ss", ss.ToString("D2")).Replace("mm", mm.ToString("D2"))
+    End Function
 End Module

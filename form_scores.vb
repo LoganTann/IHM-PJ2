@@ -35,10 +35,10 @@
     Private Sub insertNames(j As Joueur)
         playerCombo.Items.Add(j.Nom)
         profileName.Items.Add(j.Nom)
-        totalTime.Items.Add(form_game.secsToStr(j.cumulTmpJeu, "mmmin ss"))
+        totalTime.Items.Add(GameUtils.secsToStr(j.cumulTmpJeu, "mmmin ss"))
         totalPlays.Items.Add(j.nbreDeParties)
         score.Items.Add(j.nbrMaxCarréTrouvés)
-        scoreTime.Items.Add(form_game.secsToStr(j.tempsMin, "mmmin ss"))
+        scoreTime.Items.Add(GameUtils.secsToStr(j.tempsMin, "mmmin ss"))
     End Sub
 
     ''' <summary>
@@ -58,10 +58,10 @@
     Private Sub statJoueur(joueur As Joueur)
         Dim stats As String = "Statistiques Joueur : " & vbNewLine
         stats &= $"Nom : {joueur.Nom}" & vbNewLine
-        stats &= $"- Temps total passé sur notre superbe jeu: {form_game.secsToStr(joueur.cumulTmpJeu, "mmmin ss")} secondes" & vbNewLine
+        stats &= $"- Temps total passé sur notre superbe jeu: {GameUtils.secsToStr(joueur.cumulTmpJeu, "mmmin ss")} secondes" & vbNewLine
         stats &= $"- Nombre de parties finies jouées: {joueur.nbreDeParties} secondes" & vbNewLine
         stats &= $"- Nombre de paires trouvées : {joueur.nbrMaxCarréTrouvés}" & vbNewLine
-        stats &= $"  - Temps associé à la dernière paire trouvée: {form_game.secsToStr(joueur.tempsMin, "mmmin ss")} secondes"
+        stats &= $"  - Temps associé à la dernière paire trouvée: {GameUtils.secsToStr(joueur.tempsMin, "mmmin ss")} secondes"
         MsgBox(stats)
     End Sub
 
