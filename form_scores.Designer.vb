@@ -30,7 +30,7 @@ Partial Class form_scores
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
         Me.Name = "form_scores"
-        Me.Text = "form_scores"
+        Me.Text = "Tableau des scores"
         Me.ResumeLayout(False)
 
     End Sub
