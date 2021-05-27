@@ -234,6 +234,7 @@ Public Class form_game
     ''' </summary>
     Private Sub exitToMenu()
         forceClose = True
+        timer1.Enabled = False
         Me.Close() ' Quitte le form courant
         form_home.Show() ' l'affiche
     End Sub

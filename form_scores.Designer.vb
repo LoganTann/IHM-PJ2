@@ -182,6 +182,7 @@ Partial Class form_scores
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(536, 289)
+        Me.ControlBox = False
         Me.Controls.Add(Me.checkbox_SortOrder)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button1)
@@ -197,7 +198,10 @@ Partial Class form_scores
         Me.Controls.Add(Me.scoreTime)
         Me.Controls.Add(Me.score)
         Me.Controls.Add(Me.Label6)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "form_scores"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Tableau des scores"
         Me.ResumeLayout(False)
         Me.PerformLayout()

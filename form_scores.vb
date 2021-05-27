@@ -91,7 +91,7 @@
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim isSortedDesc = checkbox_SortOrder.Checked
         If (isSortedDesc) Then
-            statJoueur(sortedArray(sortedArray.Count() - 1 + playerCombo.SelectedIndex))
+            statJoueur(sortedArray(sortedArray.Count() - 1 - playerCombo.SelectedIndex))
         Else
             statJoueur(sortedArray(playerCombo.SelectedIndex))
         End If
