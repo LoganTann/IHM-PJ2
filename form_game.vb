@@ -10,14 +10,16 @@ Public Class form_game
     Private compteurCartesTrouvées As Integer = 0
     Private compteurTypesCartesTrouvée As Integer = 0
     Private forceClose As Boolean = False
-    Private allowPause As Boolean = False
     Private inPause As Boolean = False
-    Private disableRandom = False
+
+
+    Private initialAllowedTime As Integer
+    Private allowPause As Boolean
+    Private disableRandom
 
     ' nombre non positif = temps désactivé
-    Private Const ALLOWED_TIME As Integer = 60
-    Private remainingTime As Integer = ALLOWED_TIME
-    Private lastFoundTime As Integer = ALLOWED_TIME
+    Private remainingTime As Integer = initialAllowedTime
+    Private lastFoundTime As Integer = initialAllowedTime
     Private WithEvents timer1 As New System.Windows.Forms.Timer()
 
 
@@ -102,7 +104,11 @@ Public Class form_game
     ''' </summary>
     Private Sub onFormLoad(sender As Object, e As EventArgs) Handles Me.Load
         forceClose = False
-        allowPause = True
+
+        Dim options As Paramètres = GameStorage.getParamètre()
+        initialAllowedTime = options.allowedTime
+        allowPause = options.allowPause
+        disableRandom = options.disableRandom
 
         ' phase d'initialisation
         loadAllImages(True)
@@ -113,7 +119,6 @@ Public Class form_game
         Else
             printAllCardLabels_random()
         End If
-
 
         timer1.Interval = 1000
 
@@ -173,7 +178,7 @@ Public Class form_game
             disableAllCardsOfType(lastCard)
             compteurCartesTrouvées = 0
             compteurTypesCartesTrouvée += 1
-            lastFoundTime = ALLOWED_TIME - remainingTime
+            lastFoundTime = initialAllowedTime - remainingTime
 
             ' Si tous les types ont été trouvés : gagné !
             If compteurTypesCartesTrouvée = NBR_CARD_TYPES Then
@@ -196,7 +201,7 @@ Public Class form_game
 
     Private Sub onGameFinished()
         timer1.Enabled = False
-        Dim playTime = ALLOWED_TIME - remainingTime
+        Dim playTime = initialAllowedTime - remainingTime
         Dim stats As String
         stats = $"Vous avez trouvé {compteurTypesCartesTrouvée} en moins de {secsToStr(playTime, "mmminutesss")} minutes" & vbNewLine
         stats &= $"Votre partie a durée {secsToStr(playTime, "mmminutesss")}." & vbNewLine
@@ -269,7 +274,7 @@ Public Class form_game
     ''' <param name="time">Le temps en secondes. Cette fonction est conçue pour un maximum de 3599 secondes (59 minutes 59 secs)</param>
     ''' <param name="template">Une chaine de caractères où l'occurence "mm" sera remplacée par la valeur des minutes, et "ss" sera remplacée par la valeur des secondes</param>
     ''' <returns>(time, template) => template.Replace("ss", time Mod 60).Replace("mm",  (time - (time Mod 60)) / 60)</returns>
-    Private Function secsToStr(time As Integer, template As String) As String
+    Public Function secsToStr(time As Integer, template As String) As String
         Dim ss As Integer = time Mod 60
         Dim mm As Integer = (time - ss) / 60
         Return template.Replace("ss", ss).Replace("mm", mm)

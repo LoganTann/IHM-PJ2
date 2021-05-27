@@ -18,12 +18,19 @@ Module GameStorage
         Public allowedTime As Integer
         Public allowPause As Boolean
         Public disableRandom As Boolean
-        Public themeUtilise As String 'si jamais on a le temps
     End Structure
 
 
     Private tabJoueurs As New List(Of Joueur)
     Private stockageParamètres As Paramètres
+
+    Public Function getParamètre()
+        Return stockageParamètres
+    End Function
+
+    Public Sub setParamètre(param As Paramètres)
+        stockageParamètres = param
+    End Sub
 
     Private idJoueurCourant As Integer
 
@@ -128,6 +135,24 @@ Module GameStorage
             balise_joueurs.AppendChild(balise_joueur)
         Next
         fichierDeSauvegarde.DocumentElement.AppendChild(balise_joueurs)
+
+
+        Dim balise_parametres As XmlElement
+        balise_parametres = fichierDeSauvegarde.CreateElement("parametres")
+        Dim balise_allowedTime As XmlElement
+        Dim balise_disableRandom As XmlElement
+        Dim balise_allowPause As XmlElement
+        balise_allowedTime = fichierDeSauvegarde.CreateElement("allowedTime")
+        balise_disableRandom = fichierDeSauvegarde.CreateElement("disableRandom")
+        balise_allowPause = fichierDeSauvegarde.CreateElement("allowPause")
+        balise_allowedTime.InnerText = stockageParamètres.allowedTime
+        balise_disableRandom.InnerText = stockageParamètres.disableRandom
+        balise_allowPause.InnerText = stockageParamètres.allowPause
+        balise_parametres.AppendChild(balise_allowedTime)
+        balise_parametres.AppendChild(balise_disableRandom)
+        balise_parametres.AppendChild(balise_allowPause)
+        fichierDeSauvegarde.DocumentElement.AppendChild(balise_parametres)
+
         fichierDeSauvegarde.Save(GameUtils.CD() + "\sauvegarde.XML")
     End Sub
 
@@ -139,6 +164,11 @@ Module GameStorage
         Catch ex As Exception
             addProfile("Logan")
             addProfile("Sofiane")
+            Dim param As Paramètres
+            param.allowedTime = 60
+            param.disableRandom = False
+            param.allowPause = True
+            setParamètre(param)
             Sauvegarder()
             Exit Sub
         End Try
@@ -162,6 +192,20 @@ Module GameStorage
             Next
             tabJoueurs.Add(joueurCharge)
         Next
+        Dim balise_param As XmlNode
+        balise_param = fichierDeSauvegarde.DocumentElement.GetElementsByTagName("parametres")(0)
+        Dim newparam As Paramètres
+        For Each enfant In balise_param.ChildNodes
+            Select Case enfant.LocalName
+                Case "allowedTime"
+                    newparam.allowedTime = enfant.innerText
+                Case "disableRandom"
+                    newparam.disableRandom = enfant.innerText
+                Case "allowPause"
+                    newparam.allowPause = enfant.innerText
+            End Select
+        Next
+        setParamètre(newparam)
     End Sub
 
     Public Function getPlayerName()
