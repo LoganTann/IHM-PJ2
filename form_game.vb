@@ -18,8 +18,8 @@ Public Class form_game
     Private disableRandom
 
     ' nombre non positif = temps désactivé
-    Private remainingTime As Integer = initialAllowedTime
-    Private lastFoundTime As Integer = initialAllowedTime
+    Private remainingTime As Integer
+    Private lastFoundTime As Integer
     Private WithEvents timer1 As New System.Windows.Forms.Timer()
 
 
@@ -110,6 +110,8 @@ Public Class form_game
         allowPause = options.allowPause
         disableRandom = options.disableRandom
 
+        remainingTime = initialAllowedTime
+        lastFoundTime = initialAllowedTime
         ' phase d'initialisation
         loadAllImages(True)
         If (forceClose) Then Exit Sub
