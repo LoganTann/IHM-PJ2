@@ -111,7 +111,7 @@ Partial Class form_game
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(581, 559)
+        Me.ClientSize = New System.Drawing.Size(557, 559)
         Me.Controls.Add(Me.pauseIndicator_lbl)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.lbl_time)

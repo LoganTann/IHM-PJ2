@@ -50,7 +50,7 @@ Partial Class form_scores
         'score
         '
         Me.score.FormattingEnabled = True
-        Me.score.Location = New System.Drawing.Point(399, 64)
+        Me.score.Location = New System.Drawing.Point(405, 64)
         Me.score.Name = "score"
         Me.score.Size = New System.Drawing.Size(59, 173)
         Me.score.TabIndex = 1
@@ -58,9 +58,9 @@ Partial Class form_scores
         'scoreTime
         '
         Me.scoreTime.FormattingEnabled = True
-        Me.scoreTime.Location = New System.Drawing.Point(464, 64)
+        Me.scoreTime.Location = New System.Drawing.Point(469, 64)
         Me.scoreTime.Name = "scoreTime"
-        Me.scoreTime.Size = New System.Drawing.Size(53, 173)
+        Me.scoreTime.Size = New System.Drawing.Size(68, 173)
         Me.scoreTime.TabIndex = 2
         '
         'totalTime
@@ -74,9 +74,9 @@ Partial Class form_scores
         'totalPlays
         '
         Me.totalPlays.FormattingEnabled = True
-        Me.totalPlays.Location = New System.Drawing.Point(326, 64)
+        Me.totalPlays.Location = New System.Drawing.Point(325, 64)
         Me.totalPlays.Name = "totalPlays"
-        Me.totalPlays.Size = New System.Drawing.Size(53, 173)
+        Me.totalPlays.Size = New System.Drawing.Size(61, 173)
         Me.totalPlays.TabIndex = 5
         '
         'Label1
@@ -93,7 +93,7 @@ Partial Class form_scores
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.ForeColor = System.Drawing.SystemColors.InfoText
-        Me.Label2.Location = New System.Drawing.Point(396, 45)
+        Me.Label2.Location = New System.Drawing.Point(402, 45)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(67, 13)
         Me.Label2.TabIndex = 7
@@ -104,11 +104,11 @@ Partial Class form_scores
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.ForeColor = System.Drawing.SystemColors.InfoText
-        Me.Label3.Location = New System.Drawing.Point(462, 45)
+        Me.Label3.Location = New System.Drawing.Point(467, 45)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(44, 13)
+        Me.Label3.Size = New System.Drawing.Size(65, 13)
         Me.Label3.TabIndex = 8
-        Me.Label3.Text = "Temps"
+        Me.Label3.Text = "Temps Lié"
         '
         'Label4
         '
@@ -122,7 +122,7 @@ Partial Class form_scores
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(323, 45)
+        Me.Label5.Location = New System.Drawing.Point(322, 45)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(64, 13)
         Me.Label5.TabIndex = 10
@@ -158,7 +158,7 @@ Partial Class form_scores
         '
         Me.checkbox_SortOrder.Appearance = System.Windows.Forms.Appearance.Button
         Me.checkbox_SortOrder.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.checkbox_SortOrder.Location = New System.Drawing.Point(401, 11)
+        Me.checkbox_SortOrder.Location = New System.Drawing.Point(411, 11)
         Me.checkbox_SortOrder.Name = "checkbox_SortOrder"
         Me.checkbox_SortOrder.Size = New System.Drawing.Size(25, 24)
         Me.checkbox_SortOrder.TabIndex = 14
@@ -170,9 +170,9 @@ Partial Class form_scores
         '
         Me.Label6.BackColor = System.Drawing.SystemColors.ActiveCaption
         Me.Label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label6.Location = New System.Drawing.Point(399, 9)
+        Me.Label6.Location = New System.Drawing.Point(407, 9)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(118, 29)
+        Me.Label6.Size = New System.Drawing.Size(130, 28)
         Me.Label6.TabIndex = 15
         Me.Label6.Text = "Ordre de tri"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -181,7 +181,7 @@ Partial Class form_scores
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(536, 289)
+        Me.ClientSize = New System.Drawing.Size(565, 289)
         Me.ControlBox = False
         Me.Controls.Add(Me.checkbox_SortOrder)
         Me.Controls.Add(Me.Button2)

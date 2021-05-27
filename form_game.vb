@@ -205,8 +205,7 @@ Public Class form_game
         timer1.Enabled = False
         Dim playTime = initialAllowedTime - remainingTime
         Dim stats As String
-        stats = $"Vous avez trouvé {compteurTypesCartesTrouvée} en moins de {secsToStr(playTime, "mmminutesss")} minutes" & vbNewLine
-        stats &= $"Votre partie a durée {secsToStr(playTime, "mmminutesss")}." & vbNewLine
+        stats = $"Vous avez trouvé {compteurTypesCartesTrouvée} carrés en moins de {secsToStr(playTime, "mmmin ss")} minutes" & vbNewLine
         MsgBox(stats, MsgBoxStyle.OkOnly, "Statistiques de la dernière partie")
 
         GameStorage.updateCurrentPlayerScore(playTime, compteurTypesCartesTrouvée, lastFoundTime)
@@ -280,6 +279,6 @@ Public Class form_game
     Public Function secsToStr(time As Integer, template As String) As String
         Dim ss As Integer = time Mod 60
         Dim mm As Integer = (time - ss) / 60
-        Return template.Replace("ss", ss).Replace("mm", mm)
+        Return template.Replace("ss", ss.ToString("D2")).Replace("mm", mm.ToString("D2"))
     End Function
 End Class

@@ -2,6 +2,8 @@
     Private sortedArray As List(Of Joueur)
     Private Sub form_scores_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         sortedArray = GameStorage.getTabJoueurs()
+
+        '           vvvv : Ref = https://www.dotnetperls.com/sort-vbnet
         sortedArray.Sort(New Comparison(Of Joueur)(AddressOf Joueur_compareTo))
 
         updateListBoxDisplay(False)
@@ -33,14 +35,14 @@
     Private Sub insertNames(j As Joueur)
         playerCombo.Items.Add(j.Nom)
         profileName.Items.Add(j.Nom)
-        totalTime.Items.Add(j.cumulTmpJeu)
-        totalPlays.Items.Add("todo")
+        totalTime.Items.Add(form_game.secsToStr(j.cumulTmpJeu, "mmmin ss"))
+        totalPlays.Items.Add(j.nbreDeParties)
         score.Items.Add(j.nbrMaxCarréTrouvés)
-        scoreTime.Items.Add(j.tempsMin)
+        scoreTime.Items.Add(form_game.secsToStr(j.tempsMin, "mmmin ss"))
     End Sub
 
     ''' <summary>
-    '''  Fonction de comparaison entre deux joueurs. Ref : https://www.dotnetperls.com/sort-vbnet
+    '''  Fonction de comparaison entre deux joueurs. 
     ''' </summary>
     Private Function Joueur_compareTo(valueA As Joueur, valueB As Joueur) As Integer
         ' Carrés triés par ordre décroissant
@@ -56,9 +58,10 @@
     Private Sub statJoueur(joueur As Joueur)
         Dim stats As String = "Statistiques Joueur : " & vbNewLine
         stats &= $"Nom : {joueur.Nom}" & vbNewLine
-        stats &= $"- Temps de jeu: {joueur.cumulTmpJeu} secondes" & vbNewLine
+        stats &= $"- Temps total passé sur notre superbe jeu: {form_game.secsToStr(joueur.cumulTmpJeu, "mmmin ss")} secondes" & vbNewLine
+        stats &= $"- Nombre de parties finies jouées: {joueur.nbreDeParties} secondes" & vbNewLine
         stats &= $"- Nombre de paires trouvées : {joueur.nbrMaxCarréTrouvés}" & vbNewLine
-        stats &= $"  - Temps associé à la dernière paire trouvée: {joueur.tempsMin} secondes"
+        stats &= $"  - Temps associé à la dernière paire trouvée: {form_game.secsToStr(joueur.tempsMin, "mmmin ss")} secondes"
         MsgBox(stats)
     End Sub
 
@@ -95,5 +98,9 @@
         Else
             statJoueur(sortedArray(playerCombo.SelectedIndex))
         End If
+    End Sub
+
+    Private Sub Label6_Click(sender As Object, e As EventArgs) Handles Label6.Click
+        checkbox_SortOrder.Checked = Not checkbox_SortOrder.Checked
     End Sub
 End Class

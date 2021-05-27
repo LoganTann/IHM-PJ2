@@ -2,16 +2,12 @@
 
 Module GameStorage
 
-    ' Stockage d'un joueur:
-    ' - Nom,
-    ' - nbre max de carrés d'une partie
-    ' - temps min associé
-    ' - cumul du temps de jeu
     Public Structure Joueur
         Public Nom As String
         Public nbrMaxCarréTrouvés As Integer
         Public tempsMin As Integer
         Public cumulTmpJeu As Integer
+        Public nbreDeParties As Integer
     End Structure
 
     Public Structure Paramètres
@@ -55,6 +51,7 @@ Module GameStorage
             .nbrMaxCarréTrouvés = 0
             .tempsMin = 0
             .cumulTmpJeu = 0
+            .nbreDeParties = 0
         End With
         tabJoueurs.Add(nouveauJoueur)
         Return nouveauJoueur
@@ -90,6 +87,7 @@ Module GameStorage
 
         Dim joueurCourant As Joueur = tabJoueurs(idJoueurCourant)
         joueurCourant.cumulTmpJeu += TempsTotalDeJeu
+        joueurCourant.nbreDeParties += 1
 
         If (NombreDePairesTrouvees > joueurCourant.nbrMaxCarréTrouvés) Then
             ' Si paires supérieure : on mets à jour paires et son temps
@@ -117,21 +115,25 @@ Module GameStorage
             Dim balise_tempsCumul As XmlElement
             Dim balise_paires As XmlElement
             Dim balise_tempsAssocie As XmlElement
+            Dim balise_nbreDeParties As XmlElement
             balise_joueur = fichierDeSauvegarde.CreateElement("joueur")
             balise_nom = fichierDeSauvegarde.CreateElement("nom")
             balise_tempsCumul = fichierDeSauvegarde.CreateElement("tempsCumul")
             balise_paires = fichierDeSauvegarde.CreateElement("paires")
             balise_tempsAssocie = fichierDeSauvegarde.CreateElement("tempsAssocie")
+            balise_nbreDeParties = fichierDeSauvegarde.CreateElement("nbreDeParties")
 
             balise_nom.InnerText = j.Nom
             balise_tempsCumul.InnerText = j.cumulTmpJeu
             balise_paires.InnerText = j.nbrMaxCarréTrouvés
             balise_tempsAssocie.InnerText = j.tempsMin
+            balise_nbreDeParties.InnerText = j.nbreDeParties
 
             balise_joueur.AppendChild(balise_nom)
             balise_joueur.AppendChild(balise_tempsCumul)
             balise_joueur.AppendChild(balise_paires)
             balise_joueur.AppendChild(balise_tempsAssocie)
+            balise_joueur.AppendChild(balise_nbreDeParties)
             balise_joueurs.AppendChild(balise_joueur)
         Next
         fichierDeSauvegarde.DocumentElement.AppendChild(balise_joueurs)
@@ -188,6 +190,8 @@ Module GameStorage
                         joueurCharge.nbrMaxCarréTrouvés = infosJoueur.InnerText
                     Case "tempsAssocie"
                         joueurCharge.tempsMin = infosJoueur.InnerText
+                    Case "nbreDeParties"
+                        joueurCharge.nbreDeParties = infosJoueur.InnerText
                 End Select
             Next
             tabJoueurs.Add(joueurCharge)
