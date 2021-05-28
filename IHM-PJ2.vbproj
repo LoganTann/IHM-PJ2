@@ -73,33 +73,33 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="form_home.vb">
+    <Compile Include="src\form_home.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="form_home.Designer.vb">
+    <Compile Include="src\form_home.Designer.vb">
       <DependentUpon>form_home.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="form_game.Designer.vb">
+    <Compile Include="src\form_game.Designer.vb">
       <DependentUpon>form_game.vb</DependentUpon>
     </Compile>
-    <Compile Include="form_game.vb">
+    <Compile Include="src\form_game.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="form_options.Designer.vb">
+    <Compile Include="src\form_options.Designer.vb">
       <DependentUpon>form_options.vb</DependentUpon>
     </Compile>
-    <Compile Include="form_options.vb">
+    <Compile Include="src\form_options.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="form_scores.Designer.vb">
+    <Compile Include="src\form_scores.Designer.vb">
       <DependentUpon>form_scores.vb</DependentUpon>
     </Compile>
-    <Compile Include="form_scores.vb">
+    <Compile Include="src\form_scores.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GameStorage.vb" />
-    <Compile Include="GameUtils.vb" />
+    <Compile Include="src\GameStorage.vb" />
+    <Compile Include="src\GameUtils.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -117,16 +117,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="form_home.resx">
+    <EmbeddedResource Include="src\form_home.resx">
       <DependentUpon>form_home.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="form_game.resx">
+    <EmbeddedResource Include="src\form_game.resx">
       <DependentUpon>form_game.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="form_options.resx">
+    <EmbeddedResource Include="src\form_options.resx">
       <DependentUpon>form_options.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="form_scores.resx">
+    <EmbeddedResource Include="src\form_scores.resx">
       <DependentUpon>form_scores.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
